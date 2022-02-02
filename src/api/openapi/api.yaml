@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Pdf renderer API
+  version: 0.1.0
+
+tags:
+  - name: health
+    description: Basic endpoints for retrieving health of the API.
+
+paths:
+  /ping:
+    get:
+      operationId: src.api.handlers.health.ping
+      summary: Ping pong.
+      tags:
+        - health
+      responses:
+        '200':
+          description: Some default message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ping'
+
+components:
+  schemas:
+    Ping:
+      type: object
+      properties:
+        status:
+          type: string
