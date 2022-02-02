@@ -1,9 +1,10 @@
 from . import app
 
+application = app.PdfRendererAPI().app
+
 
 def main():
-    application = app.PdfRendererAPI()
-    application.app.run()
+    application.run()
 
 
 if __name__ == "__main__":
