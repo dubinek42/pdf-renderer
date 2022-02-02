@@ -1,0 +1,31 @@
+[MASTER]
+
+# jobs=0 means 'use all CPUs'
+jobs=0
+extension-pkg-whitelist=pydantic  # because pylint cannot import C modules
+
+
+[MESSAGES CONTROL]
+
+disable =
+  duplicate-code,
+  anomalous-backslash-in-string,  # disabled in favor of flake8
+  bad-continuation,  # disabled in favor of black
+  global-statement,  # it's ok with big kids
+  import-error,  # problematic to get working, disabled in favor of tests
+  line-too-long,  # disabled in favor of flake8
+  missing-docstring,  # disabled in favor of pydocstyle
+  missing-module-docstring,
+  missing-function-docstring,
+  no-else-return,  # disabled because when `if` isn't met this is not true
+  no-member,  # disabled in favor of tests
+  fixme,  # disable so we can mark code which needs to be improved later
+  no-name-in-module,  # disabled in favor of tests
+  protected-access,  # it's ok with big kids
+  too-few-public-methods,  # disabled cuz we know better
+  ungrouped-imports,  # disabled in favor of isort
+  unused-import,  # disabled in favor of flake8
+  useless-object-inheritance,  # not in python 2
+  wrong-import-order,  # disabled in favor of isort
+  wrong-import-position,  # disabled in favor of isort
+  broad-except, # disabled in favor of handling lot of error states
