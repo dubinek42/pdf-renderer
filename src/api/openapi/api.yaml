@@ -4,8 +4,8 @@ info:
   version: 0.1.0
 
 tags:
-  - name: health
-    description: Basic endpoints for retrieving health of the API.
+- name: health
+  description: Basic endpoints for retrieving health of the API.
 
 paths:
   /ping:
@@ -13,7 +13,7 @@ paths:
       operationId: src.api.handlers.health.ping
       summary: Ping pong.
       tags:
-        - health
+      - health
       responses:
         '200':
           description: Some default message.
