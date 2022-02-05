@@ -6,6 +6,8 @@ info:
 tags:
 - name: health
   description: Basic endpoints for retrieving health of the API.
+- name: processing
+  description: Endpoints for the main processing of files.
 
 paths:
   /ping:
@@ -21,11 +23,138 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ping'
+  /result:
+    get:
+      operationId: src.api.handlers.processing.get_result
+      summary: Get processed PNG images.
+      tags:
+      - processing
+      parameters:
+      - in: query
+        name: file_id
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+        required: true
+      responses:
+        '200':
+          description: Processed PNG images.
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/ProcessedFiles'
+        '404':
+          description: No file was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /status:
+    get:
+      operationId: src.api.handlers.processing.get_status
+      summary: Get the status of processing of a file.
+      tags:
+      - processing
+      parameters:
+      - in: query
+        name: file_id
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+        required: true
+      responses:
+        '200':
+          description: Processing status of the file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessingStatus'
+        '404':
+          description: File was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /upload:
+    post:
+      operationId: src.api.handlers.processing.upload_file
+      summary: Upload a PDF file to start processing.
+      tags:
+      - processing
+      requestBody:
+        description: A PDF file to be uploaded.
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: File successfully uploaded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploaded'
+        '400':
+          description: Wrong format of file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 400
+        message:
+          type: string
+    FileUploaded:
+      type: object
+      properties:
+        id:
+          type: number
+          minimum: 0
+          example: 42
+        message:
+          type: string
+          example: File uploaded and processing started.
     Ping:
       type: object
       properties:
         status:
           type: string
+    ProcessedFiles:
+      type: array
+      items:
+        type: string
+        format: binary
+    ProcessingStatus:
+      type: object
+      properties:
+        id:
+          type: number
+          minimum: 0
+          example: 42
+        code:
+          type: number
+          example: 1
+        pages:
+          type: number
+          example: 3
+        status:
+          type: string
+          example: Successfully finished.
