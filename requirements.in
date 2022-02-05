@@ -1,3 +1,8 @@
+alembic
 connexion[swagger-ui]
+dependency-injector
 gunicorn
+psycopg2-binary
+pydantic
 pylint
+sqlalchemy

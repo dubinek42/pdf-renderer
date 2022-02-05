@@ -7,7 +7,7 @@ tags:
 - name: health
   description: Basic endpoints for retrieving health of the API.
 - name: processing
-  description: Endpoints for the main processing of files.
+  description: Endpoints for the main processing of documents.
 
 paths:
   /ping:
@@ -31,7 +31,7 @@ paths:
       - processing
       parameters:
       - in: query
-        name: file_id
+        name: document_id
         schema:
           type: integer
           format: int64
@@ -53,12 +53,12 @@ paths:
   /status:
     get:
       operationId: src.api.handlers.processing.get_status
-      summary: Get the status of processing of a file.
+      summary: Get the status of processing of a document.
       tags:
       - processing
       parameters:
       - in: query
-        name: file_id
+        name: document_id
         schema:
           type: integer
           format: int64
@@ -66,25 +66,25 @@ paths:
         required: true
       responses:
         '200':
-          description: Processing status of the file.
+          description: Processing status of a document.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProcessingStatus'
         '404':
-          description: File was not found.
+          description: Document was not found.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
   /upload:
     post:
-      operationId: src.api.handlers.processing.upload_file
-      summary: Upload a PDF file to start processing.
+      operationId: src.api.handlers.processing.upload_document
+      summary: Upload a PDF document to start processing.
       tags:
       - processing
       requestBody:
-        description: A PDF file to be uploaded.
+        description: A PDF document to be uploaded.
         content:
           application/pdf:
             schema:
@@ -92,13 +92,13 @@ paths:
               format: binary
       responses:
         '201':
-          description: File successfully uploaded.
+          description: Document successfully uploaded.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FileUploaded'
+                $ref: '#/components/schemas/DocumentUploaded'
         '400':
-          description: Wrong format of file.
+          description: Wrong format of document.
           content:
             application/json:
               schema:
@@ -122,7 +122,7 @@ components:
           example: 400
         message:
           type: string
-    FileUploaded:
+    DocumentUploaded:
       type: object
       properties:
         id:
@@ -131,7 +131,7 @@ components:
           example: 42
         message:
           type: string
-          example: File uploaded and processing started.
+          example: Document uploaded and processing started.
     Ping:
       type: object
       properties:
