@@ -7,3 +7,21 @@ services:
     image: "pdfrenderer-api"
     ports:
     - "8080:8080"
+    env_file:
+    - .env
+    depends_on:
+    - db
+  db:
+    image: postgres:14.1
+    volumes:
+    - pdf-renderer_pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: pdfrenderer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+    - "5432:5432"
+
+volumes:
+  pdf-renderer_pgdata:
+    external: true

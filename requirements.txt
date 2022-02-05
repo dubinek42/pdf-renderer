@@ -4,6 +4,8 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
+alembic==1.7.6
+    # via -r requirements.in
 astroid==2.9.3
     # via pylint
 attrs==21.4.0
@@ -20,8 +22,12 @@ clickclick==20.10.2
     # via connexion
 connexion[swagger-ui]==2.10.0
     # via -r requirements.in
+dependency-injector==4.38.0
+    # via -r requirements.in
 flask==2.0.2
     # via connexion
+greenlet==1.1.2
+    # via sqlalchemy
 gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
@@ -45,8 +51,12 @@ jsonschema==3.2.0
     #   openapi-spec-validator
 lazy-object-proxy==1.7.1
     # via astroid
+mako==1.1.6
+    # via alembic
 markupsafe==2.0.1
-    # via jinja2
+    # via
+    #   jinja2
+    #   mako
 mccabe==0.6.1
     # via pylint
 openapi-schema-validator==0.1.6
@@ -55,6 +65,10 @@ openapi-spec-validator==0.3.3
     # via connexion
 platformdirs==2.4.1
     # via pylint
+psycopg2-binary==2.9.3
+    # via -r requirements.in
+pydantic==1.9.0
+    # via -r requirements.in
 pylint==2.12.2
     # via -r requirements.in
 pyrsistent==0.16.1
@@ -70,14 +84,21 @@ requests==2.27.1
     # via connexion
 six==1.16.0
     # via
+    #   dependency-injector
     #   jsonschema
     #   openapi-schema-validator
     #   openapi-spec-validator
     #   pyrsistent
+sqlalchemy==1.4.31
+    # via
+    #   -r requirements.in
+    #   alembic
 swagger-ui-bundle==0.0.9
     # via connexion
 toml==0.10.2
     # via pylint
+typing-extensions==4.0.1
+    # via pydantic
 urllib3==1.26.8
     # via requests
 werkzeug==2.0.2
