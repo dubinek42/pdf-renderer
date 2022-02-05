@@ -149,9 +149,6 @@ components:
           type: number
           minimum: 0
           example: 42
-        code:
-          type: number
-          example: 1
         pages:
           type: number
           example: 3

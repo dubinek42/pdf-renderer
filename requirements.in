@@ -2,7 +2,9 @@ alembic
 connexion[swagger-ui]
 dependency-injector
 gunicorn
+ipython
 psycopg2-binary
 pydantic
 pylint
 sqlalchemy
+structlog

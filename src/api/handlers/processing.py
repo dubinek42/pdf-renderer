@@ -2,6 +2,8 @@ import json
 
 from flask import Response
 
+from ...services import DocumentService
+
 
 def get_result(document_id: int) -> Response:
     return Response(
@@ -14,11 +16,12 @@ def get_result(document_id: int) -> Response:
 
 
 def get_status(document_id: int) -> Response:
+    document_service = DocumentService()
+    document_status = document_service.get_status_by_document_id(document_id)
+    response = {"id": document_id, "pages": 42, "status": document_status}
     return Response(
-        json.dumps(
-            {"code": 404, "message": f"Document with id {document_id} was not found."}
-        ),
-        status=404,
+        json.dumps(response),
+        status=200,
         mimetype="application/json",
     )
 
