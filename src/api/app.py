@@ -3,8 +3,8 @@ import logging
 import connexion
 import structlog
 
-from .. import services
 from ..container import Container
+from ..services import document
 from ..settings import Config
 from .handlers import errors
 
@@ -17,7 +17,7 @@ class PdfRendererAPI:
         app = connexion.FlaskApp(__name__, specification_dir="openapi/")
         app.add_api("api.yaml")
 
-        Container().wire(modules=[services])
+        Container().wire(modules=[document])
         self._configure_logging(Config().debug)
         self._register_error_handlers(app)
 

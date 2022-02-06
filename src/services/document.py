@@ -1,8 +1,9 @@
 import structlog
 from dependency_injector.wiring import Provide, inject
 
-from .container import Container
-from .db.repositories.document import DocumentRepository
+from ..api.responses.processing import ProcessingStatus
+from ..container import Container
+from ..db.repositories.document import DocumentRepository
 
 log = structlog.get_logger(__name__)
 
@@ -15,7 +16,10 @@ class DocumentService:
         document_repository: DocumentRepository = Provide[
             Container.document_repository
         ],
-    ) -> str:
+    ) -> ProcessingStatus:
         document = document_repository.get_by_id(document_id)
-        log.info("document_service.get_status", document=document.dict())
-        return document.processing_status
+        return ProcessingStatus(
+            id=document.id,
+            pages=document.pages_count,
+            status=document.processing_status,
+        )
