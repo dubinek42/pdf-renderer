@@ -2,7 +2,7 @@ import json
 
 from flask import Response
 
-from ...services import DocumentService
+from ... import services
 
 
 def get_result(document_id: int) -> Response:
@@ -16,11 +16,9 @@ def get_result(document_id: int) -> Response:
 
 
 def get_status(document_id: int) -> Response:
-    document_service = DocumentService()
-    document_status = document_service.get_status_by_document_id(document_id)
-    response = {"id": document_id, "pages": 42, "status": document_status}
+    document_service = services.Document()
     return Response(
-        json.dumps(response),
+        document_service.get_status_by_document_id(document_id).json(),
         status=200,
         mimetype="application/json",
     )
