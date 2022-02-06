@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 scratch.py
+vol-images/
+vol-documents/
+.DS_Store

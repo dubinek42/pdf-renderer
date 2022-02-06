@@ -10,5 +10,5 @@ class DocumentRepository(Repository):
                 session.query(Document).filter(Document.id == document_id).first()
             )
             if document is None:
-                raise EntityNotFoundError(document_id, EntityName.DOCUMENT)
+                raise EntityNotFoundError(str(document_id), EntityName.DOCUMENT)
             return DocumentModel.from_orm(document)

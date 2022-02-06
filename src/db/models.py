@@ -7,9 +7,13 @@ from sqlalchemy.ext.declarative import declarative_base
 Base: Any = declarative_base()
 
 
-class EntityName(Enum):
+class EntityName(str, Enum):
     DOCUMENT = "document"
     PROCESSED_IMAGE = "processed image"
+
+
+class ProcessingStatus(str, Enum):
+    FINISHED = "finished"
 
 
 class Document(Base):

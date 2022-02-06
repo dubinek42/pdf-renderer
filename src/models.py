@@ -9,3 +9,12 @@ class Document(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ProcessedImage(BaseModel):
+    document_id: int
+    page_number: int
+    file_path: str
+
+    class Config:
+        orm_mode = True

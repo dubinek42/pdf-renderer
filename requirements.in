@@ -6,5 +6,6 @@ ipython
 psycopg2-binary
 pydantic
 pylint
+requests-toolbelt
 sqlalchemy
 structlog

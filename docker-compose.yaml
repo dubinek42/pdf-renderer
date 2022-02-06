@@ -11,6 +11,8 @@ services:
     - .env
     depends_on:
     - db
+    volumes:
+    - ./vol-images:/app/images
   db:
     image: postgres:14.1
     volumes:
