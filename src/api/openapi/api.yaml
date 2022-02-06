@@ -25,8 +25,8 @@ paths:
                 $ref: '#/components/schemas/Ping'
   /result/{document_id}:
     get:
-      operationId: src.api.handlers.processing.get_result
-      summary: Get processed PNG images.
+      operationId: src.api.handlers.processing.get_result_full
+      summary: Get PNG images of processed document.
       tags:
       - processing
       parameters:
@@ -44,6 +44,51 @@ paths:
             multipart/form-data:
               schema:
                 $ref: '#/components/schemas/ProcessedFiles'
+        '102':
+          description: Processing is not finished.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No file was found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /result/{document_id}/{page}:
+    get:
+      operationId: src.api.handlers.processing.get_result_page
+      summary: Get one page of processed document.
+      tags:
+      - processing
+      parameters:
+      - in: path
+        name: document_id
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+        required: true
+      - in: path
+        name: page
+        schema:
+          type: integer
+        required: true
+      responses:
+        '200':
+          description: Processed PNG images.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '102':
+          description: Processing is not finished.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: No file was found.
           content:

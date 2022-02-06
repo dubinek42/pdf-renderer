@@ -7,7 +7,7 @@ from ..models import EntityName
 
 
 class EntityNotFoundError(Exception):
-    def __init__(self, entity_id: int, entity_name: EntityName) -> None:
+    def __init__(self, entity_id: str, entity_name: EntityName) -> None:
         self.entity_id = entity_id
         self.entity_name = entity_name
 

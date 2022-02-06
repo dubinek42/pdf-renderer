@@ -1,11 +1,8 @@
-import structlog
 from dependency_injector.wiring import Provide, inject
 
 from ..api.responses.processing import ProcessingStatus
 from ..container import Container
-from ..db.repositories.document import DocumentRepository
-
-log = structlog.get_logger(__name__)
+from ..db import repositories
 
 
 class DocumentService:
@@ -13,7 +10,7 @@ class DocumentService:
     def get_status_by_document_id(
         self,
         document_id: int,
-        document_repository: DocumentRepository = Provide[
+        document_repository: repositories.Document = Provide[
             Container.document_repository
         ],
     ) -> ProcessingStatus:

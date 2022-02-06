@@ -1,4 +1,4 @@
 from .document import DocumentService as Document
-from .file import FileService as File
+from .processed_image import ProcessedImageService as ProcessedImage
 
-__all__ = ["Document", "File"]
+__all__ = ["Document", "ProcessedImage"]
