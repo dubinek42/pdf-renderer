@@ -1,6 +1,6 @@
-from ...db.models import Document
+from ...db.models import Document, EntityName
 from ...models import Document as DocumentModel
-from .repository import Repository
+from .repository import EntityNotFoundError, Repository
 
 
 class DocumentRepository(Repository):
@@ -9,4 +9,6 @@ class DocumentRepository(Repository):
             document = (
                 session.query(Document).filter(Document.id == document_id).first()
             )
+            if document is None:
+                raise EntityNotFoundError(document_id, EntityName.DOCUMENT)
             return DocumentModel.from_orm(document)

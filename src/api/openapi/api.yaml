@@ -23,14 +23,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ping'
-  /result:
+  /result/{document_id}:
     get:
       operationId: src.api.handlers.processing.get_result
       summary: Get processed PNG images.
       tags:
       - processing
       parameters:
-      - in: query
+      - in: path
         name: document_id
         schema:
           type: integer
@@ -50,14 +50,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /status:
+  /status/{document_id}:
     get:
       operationId: src.api.handlers.processing.get_status
       summary: Get the status of processing of a document.
       tags:
       - processing
       parameters:
-      - in: query
+      - in: path
         name: document_id
         schema:
           type: integer

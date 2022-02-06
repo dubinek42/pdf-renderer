@@ -6,6 +6,7 @@ import structlog
 from .. import services
 from ..container import Container
 from ..settings import Config
+from .handlers import errors
 
 
 class PdfRendererAPI:
@@ -18,6 +19,7 @@ class PdfRendererAPI:
 
         Container().wire(modules=[services])
         self._configure_logging(Config().debug)
+        self._register_error_handlers(app)
 
         return app
 
@@ -34,3 +36,8 @@ class PdfRendererAPI:
             ],
             logger_factory=structlog.stdlib.LoggerFactory(),
         )
+
+    @staticmethod
+    def _register_error_handlers(app: connexion.FlaskApp):
+        for error, handler in errors.blueprint.items():
+            app.add_error_handler(error, handler)
