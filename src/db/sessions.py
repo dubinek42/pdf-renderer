@@ -1,11 +1,16 @@
 from contextlib import contextmanager
 from typing import Generator
 
+import sqlalchemy
 import structlog
 from pydantic import PostgresDsn
 from sqlalchemy import create_engine, orm
 
 log = structlog.get_logger(__name__)
+
+
+class SessionNotOpenError(Exception):
+    pass
 
 
 class SessionFactory:
@@ -18,8 +23,11 @@ class SessionFactory:
         session: orm.Session = self._session_factory()
         try:
             yield session
-        except Exception as exc:
+        except sqlalchemy.exc.OperationalError as exc:
             log.exception("database.open_session.failed", exc=exc)
+            session.rollback()
+            raise SessionNotOpenError
+        except Exception:
             session.rollback()
             raise
         finally:

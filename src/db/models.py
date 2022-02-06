@@ -1,9 +1,15 @@
+from enum import Enum
 from typing import Any
 
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base: Any = declarative_base()
+
+
+class EntityName(Enum):
+    DOCUMENT = "document"
+    PROCESSED_IMAGE = "processed image"
 
 
 class Document(Base):
