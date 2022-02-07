@@ -1,10 +1,13 @@
 import json
 
+import structlog
 from dependency_injector.wiring import Provide, inject
-from flask import Response, send_from_directory
+from flask import Response, request, send_from_directory
 
 from ... import services
 from ...container import Container
+
+log = structlog.get_logger(__name__)
 
 
 @inject
@@ -13,12 +16,14 @@ def get_result_page(
     page: int,
     base_path: str = Provide[Container.config.provided.path_images],
 ) -> Response:
+    log.debug("get_result_page.started")
     processed_image_service = services.ProcessedImage()
     image = processed_image_service.get_one_page(document_id, page)
     return send_from_directory(base_path, image.file_path)
 
 
 def get_result_full(document_id: int) -> Response:
+    log.debug("get_result_full.started")
     processed_image_service = services.ProcessedImage()
     images = processed_image_service.get_all_by_document_id(document_id)
     response = processed_image_service.compose_multipart_response(images)
@@ -35,8 +40,10 @@ def get_status(document_id: int) -> Response:
 
 
 def upload_document() -> Response:
+    document_service = services.Document()
+    document_id = document_service.create_document(request.data)
     return Response(
-        json.dumps({"code": 400, "message": "Uploaded file must be a valid PDF."}),
-        status=400,
+        json.dumps({"id": document_id, "message": "Document sucessfully uploaded."}),
+        status=201,
         mimetype="application/json",
     )

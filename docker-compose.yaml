@@ -13,6 +13,7 @@ services:
     - db
     volumes:
     - ./vol-images:/app/images
+    - ./vol-documents:/app/documents
   db:
     image: postgres:14.1
     volumes:

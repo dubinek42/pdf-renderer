@@ -6,6 +6,7 @@ ipython
 psycopg2-binary
 pydantic
 pylint
+PyPDF2
 requests-toolbelt
 sqlalchemy
 structlog

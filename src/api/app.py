@@ -18,7 +18,9 @@ class PdfRendererAPI:
         app.add_api("api.yaml")
 
         Container().wire(modules=[services, processing])
-        self._configure_logging(Config().debug)
+        config = Config()
+        self._configure_logging(config.debug)
+        app.app.config["MAX_CONTENT_LENGTH"] = config.max_upload_size_bytes
         self._register_error_handlers(app)
 
         return app

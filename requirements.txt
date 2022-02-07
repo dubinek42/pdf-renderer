@@ -110,6 +110,8 @@ pygments==2.11.2
     # via ipython
 pylint==2.12.2
     # via -r requirements.in
+pypdf2==1.26.0
+    # via -r requirements.in
 pyrsistent==0.16.1
     # via
     #   jsonschema

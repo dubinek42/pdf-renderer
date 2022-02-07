@@ -13,6 +13,7 @@ class EntityName(str, Enum):
 
 
 class ProcessingStatus(str, Enum):
+    NEW = "new"
     FINISHED = "finished"
 
 

@@ -7,3 +7,4 @@ class Config(BaseSettings):
     db_dsn: PostgresDsn
     path_documents: str = "/documents"
     path_images: str = "/images"
+    max_upload_size_bytes: int = 20 * 1000 * 1000  # 20 MB by default
