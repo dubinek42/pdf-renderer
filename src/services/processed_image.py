@@ -9,10 +9,21 @@ from ..db import repositories
 from ..db.models import ProcessedImage, ProcessingStatus
 from ..services.errors import ProcessingNotFinishedError
 
-log = structlog.get_logger()
+log = structlog.get_logger(__name__)
 
 
 class ProcessedImageService:
+    """Service for handling all business logic with processed images.
+
+    Attributes:
+        base_path: Full path to folder where images are stored.
+        processed_image_repository: Repository for handling db operations.
+
+    Raises:
+        ProcessingNotFinishedError: Processing of document into image is not done.
+
+    """
+
     @inject
     def __init__(
         self,
@@ -31,6 +42,7 @@ class ProcessedImageService:
 
     def get_one_page(self, document_id: int, page: int) -> ProcessedImage:
         self._check_processing_status(document_id)
+        log.debug("get_one_page.processing_status.ok")
         return self.processed_image_repository.get_by_pk(document_id, page)
 
     def compose_multipart_response(
@@ -60,6 +72,7 @@ class ProcessedImageService:
     ) -> None:
         document = document_repository.get_by_id(document_id)
         if document.processing_status != ProcessingStatus.FINISHED:
+            log.exception("check_processing_status.not_finished")
             raise ProcessingNotFinishedError(document_id)
 
     def _check_all_files(self, images: list[ProcessedImage]) -> None:
