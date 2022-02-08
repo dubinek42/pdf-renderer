@@ -11,6 +11,7 @@ services:
     - .env
     depends_on:
     - db
+    - rabbit
     volumes:
     - ./vol-images:/app/images
     - ./vol-documents:/app/documents
@@ -24,6 +25,10 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
     - "5432:5432"
+  rabbit:
+    image: rabbitmq:3.9
+    env_file:
+    - .env
 
 volumes:
   pdf-renderer_pgdata:

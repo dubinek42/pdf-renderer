@@ -11,6 +11,7 @@ from .handlers import errors, processing
 
 class PdfRendererAPI:
     def __init__(self) -> None:
+        self.config = Config()
         self.app = self._create_app()
 
     def _create_app(self):
@@ -18,9 +19,8 @@ class PdfRendererAPI:
         app.add_api("api.yaml")
 
         Container().wire(modules=[services, processing])
-        config = Config()
-        self._configure_logging(config.debug)
-        app.app.config["MAX_CONTENT_LENGTH"] = config.max_upload_size_bytes
+        self._configure_logging(self.config.debug)
+        app.app.config["MAX_CONTENT_LENGTH"] = self.config.max_upload_size_bytes
         self._register_error_handlers(app)
 
         return app

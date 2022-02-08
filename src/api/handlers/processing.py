@@ -2,6 +2,7 @@ import json
 
 import structlog
 from dependency_injector.wiring import Provide, inject
+from dramatiq.errors import ConnectionError
 from flask import Response, request, send_from_directory
 
 from ... import services
@@ -42,6 +43,12 @@ def get_status(document_id: int) -> Response:
 def upload_document() -> Response:
     document_service = services.Document()
     document_id = document_service.create_document(request.data)
+
+    try:
+        services.Render().do_the_thing.send(document_id)
+    except ConnectionError as exc:
+        log.exception("upload_document.send_task_to_broker.failed", exc=exc)
+
     return Response(
         json.dumps({"id": document_id, "message": "Document sucessfully uploaded."}),
         status=201,
