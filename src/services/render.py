@@ -58,7 +58,6 @@ class RenderService:
         document_repository: repositories.Document = Provide[
             Container.document_repository
         ],
-        processed_image_repository=None,
     ) -> None:
         log.info("render_document.started")
 
@@ -67,7 +66,7 @@ class RenderService:
             log.error("render_document.not_new", document_id=document_id)
             return
 
-        self._convert_pages(document, processed_image_repository)
+        self._convert_pages(document)
 
         document.processing_status = ProcessingStatus.FINISHED
         document_repository.update(document)

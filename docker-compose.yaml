@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-    image: "pdfrenderer-api"
+    image: pdfrenderer
     ports:
     - "8080:8080"
     env_file:
@@ -29,6 +29,17 @@ services:
     image: rabbitmq:3.9
     env_file:
     - .env
+  workers:
+    image: pdfrenderer
+    command: dramatiq src.messaging.tasks -p 2 -t 4
+    env_file:
+    - .env
+    depends_on:
+    - rabbit
+    restart: unless-stopped
+    volumes:
+    - ./vol-images:/app/images
+    - ./vol-documents:/app/documents
 
 volumes:
   pdf-renderer_pgdata:
