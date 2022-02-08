@@ -72,7 +72,7 @@ class ProcessedImageService:
     ) -> None:
         document = document_repository.get_by_id(document_id)
         if document.processing_status != ProcessingStatus.FINISHED:
-            log.exception("check_processing_status.not_finished")
+            log.error("check_processing_status.not_finished")
             raise ProcessingNotFinishedError(document_id)
 
     def _check_all_files(self, images: list[ProcessedImage]) -> None:

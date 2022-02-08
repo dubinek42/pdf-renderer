@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import connexion
 import structlog
@@ -28,15 +29,21 @@ class PdfRendererAPI:
     @staticmethod
     def _configure_logging(debug: bool) -> None:
         level = logging.DEBUG if debug else logging.INFO
-        logging.basicConfig(level=level)
-        structlog.configure_once(
+        logging.basicConfig(stream=sys.stderr, format="%(message)s", level=level)
+        structlog.configure(
             processors=[
-                structlog.threadlocal.merge_threadlocal,
-                structlog.processors.add_log_level,
-                structlog.processors.TimeStamper(),
-                structlog.processors.JSONRenderer(),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+                structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M.%S"),
+                structlog.processors.StackInfoRenderer(),
+                structlog.processors.format_exc_info,
+                structlog.dev.ConsoleRenderer(),
             ],
+            context_class=dict,
             logger_factory=structlog.stdlib.LoggerFactory(),
+            wrapper_class=structlog.stdlib.BoundLogger,
+            cache_logger_on_first_use=True,
         )
 
     @staticmethod
