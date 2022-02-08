@@ -1,16 +1,13 @@
-import io
 import os
 import uuid
 
 import structlog
 from dependency_injector.wiring import Provide, inject
-from PyPDF2 import PdfFileReader
-from PyPDF2.utils import PdfReadError
 
 from ..api.responses.processing import ProcessingStatus
 from ..container import Container
 from ..db import repositories
-from . import errors
+from .render import RenderService
 
 log = structlog.get_logger(__name__)
 
@@ -52,34 +49,13 @@ class DocumentService:
             Id of the new db record.
 
         """
-        pages_count = self._check_document(document)
+        pages_count = RenderService.check_document(document)
         file_path = self._generate_file_name()
 
         self._save_file(document, file_path)
         new_id = document_repository.create(pages_count, file_path)
 
         return new_id
-
-    def _check_document(self, data: bytes) -> int:
-        """Check if document is a valid PDF.
-
-        Args:
-            data: Binary data of document.
-
-        Raises:
-            PdfInvalidError: File is not valid.
-
-        Returns:
-            Number of pages in document.
-
-        """
-        try:
-            bytes_stream = io.BytesIO(data)
-            pdf = PdfFileReader(bytes_stream)
-            return pdf.getNumPages()
-        except PdfReadError as exc:
-            log.exception("pdf_read.error", exc=exc)
-            raise errors.PdfInvalidError
 
     @staticmethod
     def _generate_file_name() -> str:
