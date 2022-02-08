@@ -7,6 +7,7 @@ from flask import Response, request, send_from_directory
 
 from ... import services
 from ...container import Container
+from ...messaging import tasks
 
 log = structlog.get_logger(__name__)
 
@@ -45,7 +46,8 @@ def upload_document() -> Response:
     document_id = document_service.create_document(request.data)
 
     try:
-        services.Render().do_the_thing.send(document_id)
+        tasks.render_document.send(document_id)
+        log.info("upload_document.task_sent_to_broker", document_id=document_id)
     except ConnectionError as exc:
         log.exception("upload_document.send_task_to_broker.failed", exc=exc)
 

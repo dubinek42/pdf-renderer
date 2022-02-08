@@ -4,6 +4,7 @@ dependency-injector
 dramatiq[rabbitmq]
 gunicorn
 ipython
+pdf2image
 psycopg2-binary
 pydantic
 pylint
