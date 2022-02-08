@@ -1,12 +1,16 @@
 import io
 
+import dramatiq
 import structlog
 from PyPDF2 import PdfFileReader
 from PyPDF2.utils import PdfReadError
 
+from ..messaging.broker import broker
 from . import errors
 
 log = structlog.get_logger(__name__)
+
+dramatiq.set_broker(broker)
 
 
 class RenderService:
@@ -31,3 +35,7 @@ class RenderService:
         except PdfReadError as exc:
             log.exception("pdf_read.error", exc=exc)
             raise errors.PdfInvalidError
+
+    @dramatiq.actor
+    def do_the_thing(self, document_id: int):
+        log.info("render_service.doing the thing!")

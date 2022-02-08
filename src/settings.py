@@ -1,4 +1,13 @@
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import BaseSettings, Field, PostgresDsn
+
+
+class RabbitConfig(BaseSettings):
+    user: str = Field("dev", env="rabbitmq_default_user")
+    password: str = Field("dev", env="rabbitmq_default_pass")
+    rabbit_host: str = "rabbit"
+
+    def get_rabbit_url(self) -> str:
+        return f"amqp://{self.user}:{self.password}@{self.rabbit_host}"
 
 
 class Config(BaseSettings):

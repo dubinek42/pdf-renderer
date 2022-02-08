@@ -29,3 +29,6 @@ disable =
   wrong-import-order,  # disabled in favor of isort
   wrong-import-position,  # disabled in favor of isort
   broad-except, # disabled in favor of handling lot of error states
+
+[TYPECHECK]
+  generated-members=send

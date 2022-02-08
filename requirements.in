@@ -1,6 +1,7 @@
 alembic
 connexion[swagger-ui]
 dependency-injector
+dramatiq[rabbitmq]
 gunicorn
 ipython
 psycopg2-binary

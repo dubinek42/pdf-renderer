@@ -35,6 +35,8 @@ decorator==5.1.1
     # via ipython
 dependency-injector==4.38.0
     # via -r requirements.in
+dramatiq[rabbitmq]==1.12.3
+    # via -r requirements.in
 executing==0.8.2
     # via stack-data
 flask==2.0.2
@@ -92,10 +94,14 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
+pika==1.2.0
+    # via dramatiq
 platformdirs==2.4.1
     # via
     #   black
     #   pylint
+prometheus-client==0.13.1
+    # via dramatiq
 prompt-toolkit==3.0.26
     # via ipython
 psycopg2-binary==2.9.3
