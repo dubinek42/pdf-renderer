@@ -8,6 +8,27 @@ log = structlog.get_logger(__name__)
 
 
 class ProcessedImageRepository(Repository):
+    def create(self, document_id: int, page_number: int, file_path: str) -> None:
+        """Create record of processed image.
+
+        Args:
+            document_id: Identifier to which document image belongs.
+            page_number: Number of current page.
+            file_path: Name of the saved file.
+
+        Returns:
+            Id of db object.
+
+        """
+        image = ProcessedImage(
+            document_id=document_id,
+            page_number=page_number,
+            file_path=file_path,
+        )
+        with self._open_session() as session:
+            session.add(image)
+            session.commit()
+
     def get_by_pk(self, document_id: int, page_number: int) -> ProcessedImageModel:
         """Get processed image by primary key.
 

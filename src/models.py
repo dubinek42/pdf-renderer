@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 
+from .db.models import ProcessingStatus
+
 
 class Document(BaseModel):
     id: int
-    processing_status: str
+    processing_status: ProcessingStatus
     pages_count: int
     file_path: str
 

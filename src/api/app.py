@@ -5,6 +5,7 @@ import connexion
 import structlog
 
 from .. import services
+from ..constants import MAX_UPLOAD_SIZE_BYTES
 from ..container import Container
 from ..settings import Config
 from .handlers import errors, processing
@@ -21,7 +22,7 @@ class PdfRendererAPI:
 
         Container().wire(modules=[services, processing])
         self._configure_logging(self.config.debug)
-        app.app.config["MAX_CONTENT_LENGTH"] = self.config.max_upload_size_bytes
+        app.app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_SIZE_BYTES
         self._register_error_handlers(app)
 
         return app

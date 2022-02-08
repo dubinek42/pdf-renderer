@@ -51,3 +51,10 @@ class DocumentRepository(Repository):
                 log.error("get_by_id.not_found", document_id=document_id)
                 raise EntityNotFoundError(str(document_id), EntityName.DOCUMENT)
             return DocumentModel.from_orm(document)
+
+    def update(self, document: DocumentModel) -> None:
+        with self._open_session() as session:
+            session.query(Document).filter(Document.id == document.id).update(
+                document.dict()
+            )
+            session.commit()
