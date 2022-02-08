@@ -2,11 +2,14 @@ import dramatiq
 import structlog
 
 from .. import services
+from ..container import Container
 from .broker import broker
 
 log = structlog.get_logger(__name__)
 
 dramatiq.set_broker(broker)
+
+Container().wire(modules=[services])
 
 
 @dramatiq.actor

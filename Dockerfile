@@ -10,5 +10,5 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
-ENTRYPOINT [ "gunicorn", "-c", "gunicorn_config.py", "src.api.main:application"]
+CMD [ "gunicorn", "-c", "gunicorn_config.py", "src.api.main:application"]
 EXPOSE 8080
