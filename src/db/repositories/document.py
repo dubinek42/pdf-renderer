@@ -48,6 +48,6 @@ class DocumentRepository(Repository):
                 session.query(Document).filter(Document.id == document_id).first()
             )
             if document is None:
-                log.exception("get_by_id.not_found", document_id=document_id)
+                log.error("get_by_id.not_found", document_id=document_id)
                 raise EntityNotFoundError(str(document_id), EntityName.DOCUMENT)
             return DocumentModel.from_orm(document)

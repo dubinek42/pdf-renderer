@@ -34,7 +34,7 @@ class ProcessedImageRepository(Repository):
                 .first()
             )
             if image is None:
-                log.exception(
+                log.error(
                     "get_by_pk.not_found",
                     document_id=document_id,
                     page_number=page_number,
@@ -65,6 +65,6 @@ class ProcessedImageRepository(Repository):
                 .all()
             )
             if len(images) < 1:
-                log.exception("get_by_document_id.not_found", document_id=document_id)
+                log.error("get_by_document_id.not_found", document_id=document_id)
                 raise EntityNotFoundError(str(document_id), EntityName.PROCESSED_IMAGE)
             return [ProcessedImageModel.from_orm(image) for image in images]
