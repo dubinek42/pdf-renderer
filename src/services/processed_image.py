@@ -43,7 +43,9 @@ class ProcessedImageService:
         log.debug("get_one_page.processing_status.ok")
         return self.processed_image_repository.get_by_pk(document_id, page)
 
-    def compose_multipart_response(self, images: list[ProcessedImage]) -> MultipartEncoder:
+    def compose_multipart_response(
+        self, images: list[ProcessedImage]
+    ) -> MultipartEncoder:
         fields = {
             f"field{id}": (
                 f"document{image.document_id}_page{image.page_number}.png",
@@ -73,5 +75,6 @@ class ProcessedImageService:
         try:
             with open(full_path, "rb") as _:
                 log.debug("check_file.ok", filename=filename)
-        except Exception:
+        except Exception as exc:
+            log.exception("check_file.failed", exc=exc)
             raise

@@ -2,13 +2,12 @@ import logging
 import sys
 
 import connexion
-from pydantic import BaseSettings
 import structlog
+from pydantic import BaseSettings
 
 from .. import services
 from ..constants import MAX_UPLOAD_SIZE_BYTES
 from ..container import Container
-from ..settings import Config
 from .handlers import errors, processing
 
 

@@ -2,7 +2,6 @@ import io
 import os
 
 import structlog
-from dependency_injector.wiring import Provide, inject
 from pdf2image import convert_from_path
 from PIL import Image
 from PIL.PpmImagePlugin import PpmImageFile
@@ -19,7 +18,13 @@ log = structlog.get_logger(__name__)
 
 
 class RenderService:
-    def __init__(self, path_documents: str, path_images: str, document_repository: repositories.Document, processed_image_repository: repositories.ProcessedImage) -> None:
+    def __init__(
+        self,
+        path_documents: str,
+        path_images: str,
+        document_repository: repositories.Document,
+        processed_image_repository: repositories.ProcessedImage,
+    ) -> None:
         self.path_documents = path_documents
         self.path_images = path_images
         self.document_repository = document_repository
@@ -62,7 +67,6 @@ class RenderService:
 
         log.info("render_document.success")
 
-    @inject
     def _convert_pages(self, document: Document):
         document_path = os.path.join(self.path_documents, document.file_path)
         images = convert_from_path(document_path)

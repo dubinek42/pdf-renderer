@@ -1,5 +1,5 @@
 # PDF rendering application
-This is a simple service for converting PDF files into normalized PNG images. The API accepts PDF douments, then it processes it asynchronously and when the result is ready, you can download finished PNG images.
+This is a simple service for converting PDF files into normalized PNG images. The API accepts PDF douments, then it processes it asynchronously and when the result is ready, you can download finished PNG images. Normalized image means, that it will shrink in size to fit into a 1200x1600 px rectangle without changing its aspect ratio.
 
 Application uses `Flask` (with Connexion) for REST API, tasks are handled by `dramatiq` running with `rabbitmq` backend, and `Postgresql` database is used for storing information about documents. Files are stored directly in filesystem (mounted as external volume to docker).
 

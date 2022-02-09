@@ -3,15 +3,17 @@ import uuid
 
 import structlog
 
-from .render import RenderService
 from ..api.responses.processing import ProcessingStatus
 from ..db import repositories
+from .render import RenderService
 
 log = structlog.get_logger(__name__)
 
 
 class DocumentService:
-    def __init__(self, base_path: str, document_repository: repositories.Document) -> None:
+    def __init__(
+        self, base_path: str, document_repository: repositories.Document
+    ) -> None:
         self.base_path = base_path
         self.document_repository = document_repository
 
