@@ -10,7 +10,6 @@ from PyPDF2 import PdfFileReader
 from PyPDF2.utils import PdfReadError
 
 from ..constants import MAX_IMAGE_SIZE
-from ..container import Container
 from ..db import repositories
 from ..db.models import ProcessingStatus
 from ..models import Document
@@ -20,14 +19,11 @@ log = structlog.get_logger(__name__)
 
 
 class RenderService:
-    @inject
-    def __init__(
-        self,
-        path_documents: str = Provide[Container.config.provided.path_documents],
-        path_images: str = Provide[Container.config.provided.path_images],
-    ) -> None:
+    def __init__(self, path_documents: str, path_images: str, document_repository: repositories.Document, processed_image_repository: repositories.ProcessedImage) -> None:
         self.path_documents = path_documents
         self.path_images = path_images
+        self.document_repository = document_repository
+        self.processed_image_repository = processed_image_repository
 
     @staticmethod
     def check_document(data: bytes) -> int:
@@ -51,17 +47,10 @@ class RenderService:
             log.exception("pdf_read.error", exc=exc)
             raise errors.PdfInvalidError
 
-    @inject
-    def render_document(
-        self,
-        document_id: int,
-        document_repository: repositories.Document = Provide[
-            Container.document_repository
-        ],
-    ) -> None:
+    def render_document(self, document_id: int) -> None:
         log.info("render_document.started")
 
-        document = document_repository.get_by_id(document_id)
+        document = self.document_repository.get_by_id(document_id)
         if document.processing_status != ProcessingStatus.NEW:
             log.error("render_document.not_new", document_id=document_id)
             return
@@ -69,18 +58,12 @@ class RenderService:
         self._convert_pages(document)
 
         document.processing_status = ProcessingStatus.FINISHED
-        document_repository.update(document)
+        self.document_repository.update(document)
 
         log.info("render_document.success")
 
     @inject
-    def _convert_pages(
-        self,
-        document: Document,
-        processed_image_repository: repositories.ProcessedImage = Provide[
-            Container.processed_image_repository
-        ],
-    ):
+    def _convert_pages(self, document: Document):
         document_path = os.path.join(self.path_documents, document.file_path)
         images = convert_from_path(document_path)
         for page_number, image in enumerate(images):
@@ -89,7 +72,7 @@ class RenderService:
             file_path = f"document{document.id}_page{page_number}.png"
             full_path = os.path.join(self.path_images, file_path)
             image.save(full_path, "PNG")
-            processed_image_repository.create(document.id, page_number, file_path)
+            self.processed_image_repository.create(document.id, page_number, file_path)
 
     @staticmethod
     def _normalize_image_size(image: PpmImageFile) -> None:
