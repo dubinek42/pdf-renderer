@@ -14,6 +14,6 @@ class Config(BaseSettings):
     app_name: str = "pdf-renderer"
     debug: bool = False
     db_dsn: PostgresDsn
-    path_documents: str = "/documents"
-    path_images: str = "/images"
+    path_documents: str = "/app/documents"
+    path_images: str = "/app/images"
     max_upload_size_bytes: int = 20 * 1000 * 1000  # 20 MB by default
