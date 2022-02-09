@@ -83,14 +83,14 @@ paths:
               schema:
                 type: string
                 format: binary
-        '102':
-          description: Processing is not finished.
+        '404':
+          description: No file was found.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '404':
-          description: No file was found.
+        '409':
+          description: Processing is not finished.
           content:
             application/json:
               schema:

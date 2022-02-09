@@ -17,7 +17,9 @@ def get_result_page(
     document_id: int,
     page: int,
     base_path: str = Provide[Container.config.provided.path_images],
-    processed_image_service: services.ProcessedImage = Provide[Container.processed_image_service],
+    processed_image_service: services.ProcessedImage = Provide[
+        Container.processed_image_service
+    ],
 ) -> Response:
     log.debug("get_result_page.started")
     image = processed_image_service.get_one_page(document_id, page)
@@ -25,7 +27,12 @@ def get_result_page(
 
 
 @inject
-def get_result_full(document_id: int, processed_image_service: services.ProcessedImage = Provide[Container.processed_image_service]) -> Response:
+def get_result_full(
+    document_id: int,
+    processed_image_service: services.ProcessedImage = Provide[
+        Container.processed_image_service
+    ],
+) -> Response:
     log.debug("get_result_full.started")
     images = processed_image_service.get_all_by_document_id(document_id)
     response = processed_image_service.compose_multipart_response(images)
@@ -33,7 +40,9 @@ def get_result_full(document_id: int, processed_image_service: services.Processe
 
 
 @inject
-def get_status(document_id: int, document_service = Provide[Container.document_service]) -> Response:
+def get_status(
+    document_id: int, document_service=Provide[Container.document_service]
+) -> Response:
     return Response(
         document_service.get_status_by_document_id(document_id).json(),
         status=200,
@@ -42,9 +51,10 @@ def get_status(document_id: int, document_service = Provide[Container.document_s
 
 
 @inject
-def upload_document(document_service: services.Document = Provide[Container.document_service]) -> Response:
+def upload_document(
+    document_service: services.Document = Provide[Container.document_service],
+) -> Response:
     document_id = document_service.create_document(request.data)
-
     try:
         tasks.render_document.send(document_id)
         log.info("upload_document.task_sent_to_broker", document_id=document_id)
