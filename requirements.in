@@ -9,6 +9,10 @@ psycopg2-binary
 pydantic
 pylint
 PyPDF2
+pytest
+pytest-cov
+pytest-factoryboy
+pytest-mock
 requests-toolbelt
 sqlalchemy
 structlog

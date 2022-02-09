@@ -1,6 +1,7 @@
 from . import app
+from ..settings import Config
 
-application = app.PdfRendererAPI().app
+application = app.PdfRendererAPI(Config()).app
 
 
 def main():

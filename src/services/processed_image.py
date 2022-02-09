@@ -1,10 +1,8 @@
 import os
 
 import structlog
-from dependency_injector.wiring import Provide, inject
 from requests_toolbelt import MultipartEncoder
 
-from ..container import Container
 from ..db import repositories
 from ..db.models import ProcessedImage, ProcessingStatus
 from ..services.errors import ProcessingNotFinishedError
@@ -17,6 +15,7 @@ class ProcessedImageService:
 
     Attributes:
         base_path: Full path to folder where images are stored.
+        document_repository: Repository for handling db operations
         processed_image_repository: Repository for handling db operations.
 
     Raises:
@@ -24,15 +23,14 @@ class ProcessedImageService:
 
     """
 
-    @inject
     def __init__(
         self,
-        base_path: str = Provide[Container.config.provided.path_images],
-        processed_image_repository: repositories.ProcessedImage = Provide[
-            Container.processed_image_repository
-        ],
+        base_path: str,
+        document_repository: repositories.Document,
+        processed_image_repository: repositories.ProcessedImage,
     ) -> None:
         self.base_path = base_path
+        self.document_repository = document_repository
         self.processed_image_repository = processed_image_repository
 
     def get_all_by_document_id(self, document_id: int) -> list[ProcessedImage]:
@@ -45,9 +43,7 @@ class ProcessedImageService:
         log.debug("get_one_page.processing_status.ok")
         return self.processed_image_repository.get_by_pk(document_id, page)
 
-    def compose_multipart_response(
-        self, images: list[ProcessedImage]
-    ) -> MultipartEncoder:
+    def compose_multipart_response(self, images: list[ProcessedImage]) -> MultipartEncoder:
         fields = {
             f"field{id}": (
                 f"document{image.document_id}_page{image.page_number}.png",
@@ -62,15 +58,8 @@ class ProcessedImageService:
         self._check_processing_status(document_id)
         return self.processed_image_repository.get_by_document_id(document_id)
 
-    @inject
-    def _check_processing_status(
-        self,
-        document_id: int,
-        document_repository: repositories.Document = Provide[
-            Container.document_repository
-        ],
-    ) -> None:
-        document = document_repository.get_by_id(document_id)
+    def _check_processing_status(self, document_id: int) -> None:
+        document = self.document_repository.get_by_id(document_id)
         if document.processing_status != ProcessingStatus.FINISHED:
             log.error("check_processing_status.not_finished")
             raise ProcessingNotFinishedError(document_id)
